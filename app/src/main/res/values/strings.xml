@@ -1,0 +1,27 @@
+<resources>
+    <string name="app_name">HENSYOKU</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="search">Search</string>
+
+    <string-array name="chiki">
+
+        <item>周辺検索</item>
+        <!-- ミドルな地域を指定 -->
+        <!-- Y700 -->
+        <item>博多</item>
+        <!-- Y706 -->
+        <item>天神・西中洲・春吉</item>
+        <!-- Y705 -->
+        <item>中洲・中洲川端</item>
+        <!-- Y710 -->
+        <item>西新・姪浜・その他西エリア</item>
+        <!-- Y711 -->
+        <item>吉塚・香椎・その他東エリア</item>
+        <!-- Y712 -->
+        <item>大名・今泉・警固</item>
+        <!-- Y713 -->
+        <item>薬院･平尾･高砂</item>
+
+    </string-array>
+
+</resources>
