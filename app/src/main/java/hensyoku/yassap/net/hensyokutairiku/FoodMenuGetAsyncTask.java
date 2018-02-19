@@ -46,14 +46,14 @@ public class FoodMenuGetAsyncTask extends AsyncTask<String, Object, Object> {
     @Override
     protected Object doInBackground(String[] strings) {
 
-        String url = strings[0];
-        String apiKey = strings[1];
-        String jsonFormat = strings[2];
+        String apiUrl = strings[0];
+        String searchArea = strings[1];
+        String foodMenu = strings[2];
 
         OkHttpClient okHttpClient = new OkHttpClient();
 
         Request request = new Request.Builder()
-                .url(url + apiKey + jsonFormat)
+                .url(apiUrl + searchArea + foodMenu)
                 .get()
                 .build();
 

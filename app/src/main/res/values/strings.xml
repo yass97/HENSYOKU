@@ -5,7 +5,11 @@
 
     <string-array name="chiki">
 
-        <item>周辺検索</item>
+        <item>周辺検索(300m以内)</item>
+        <item>周辺検索(500m以内)</item>
+        <item>周辺検索(1000m以内)</item>
+        <item>周辺検索(2000m以内)</item>
+        <item>周辺検索(3000m以内)</item>
         <!-- ミドルな地域を指定 -->
         <!-- Y700 -->
         <item>博多</item>

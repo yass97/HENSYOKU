@@ -5,8 +5,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import android.widget.ListView;
-import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -32,6 +30,7 @@ import okhttp3.ResponseBody;
 public class GetAsyncTask extends AsyncTask<String, Void, Object> {
 
     private final WeakReference<Activity> w_Activity;
+    ArrayList<Shop> shopList = new ArrayList<>();
 
     private ProgressDialog m_ProgressDialog;
 
@@ -115,6 +114,10 @@ public class GetAsyncTask extends AsyncTask<String, Void, Object> {
         // お店の名前と住所を格納するList。
         List<Map<String, String>> shopNameAddress = new ArrayList<>();
 
+        // お店のロゴイメージを取得。
+        List<String> logoImageList = new ArrayList<>();
+        List<String> shopName = new ArrayList<>();
+        List<String> shopAddress = new ArrayList<>();
         // お店のURLを格納する。
         JSONArray shopUrls = new JSONArray();
 
@@ -127,6 +130,8 @@ public class GetAsyncTask extends AsyncTask<String, Void, Object> {
 
             for (int i = 0; i < shops.length(); i++) {
 
+                Shop shop = new Shop();
+
                 JSONObject shopData = shops.getJSONObject(i);
 
                 JSONObject url = shopData.getJSONObject("urls");
@@ -137,6 +142,18 @@ public class GetAsyncTask extends AsyncTask<String, Void, Object> {
                 saMap.put("shopName", shopData.getString("name"));
                 saMap.put("shopAddress", shopData.getString("address"));
                 shopNameAddress.add(saMap);
+
+
+                logoImageList.add(shopData.getString("logo_image"));
+                shopName.add(shopData.getString("name"));
+                shopAddress.add(shopData.getString("address"));
+
+                shop.setShopName(shopData.getString("name"));
+                shop.setShopAddress(shopData.getString("address"));
+                shop.setUrl(shopData.getString("logo_image"));
+                shopList.add(shop);
+
+
             }
 
         } catch (JSONException je) {
@@ -144,7 +161,18 @@ public class GetAsyncTask extends AsyncTask<String, Void, Object> {
             je.getStackTrace();
         }
 
+
         Activity activity = w_Activity.get();
+
+        Shop[] shops = new Shop[shopList.size()];
+        for (int i = 0; i < shopList.size(); i++) {
+
+            shops[i] = shopList.get(i);
+        }
+
+        // 画像を取得する処理をここで挟む
+        new GetImageAsyncTask(activity).execute(shops);
+
 
         if (activity == null || activity.isFinishing()) {
 
@@ -159,21 +187,15 @@ public class GetAsyncTask extends AsyncTask<String, Void, Object> {
         editor.putString("urlList", shopUrls.toString());
         editor.apply();
 
-        // お店を表示するリストのインスタンスを取得する。
-        ListView listView = activity.findViewById(R.id.resultList);
-
         // 検索して取得できたお店が0件だった場合、メッセージを表示する。
         if (shopNameAddress.isEmpty()) {
 
             Toast.makeText(activity, "該当するお店はありませんでした", Toast.LENGTH_LONG).show();
         }
 
-        // リストに表示するタイトルとサブタイトルを設定する。
-        SimpleAdapter adapter = new SimpleAdapter(activity, shopNameAddress, R.layout.list, new String[]{"shopName", "shopAddress"},
-                new int[]{R.id.shopName, R.id.shopAddress});
-
-        // リストに上記で設定したデータをリストを表示するオブジェクトに設定する。
-        listView.setAdapter(adapter);
+//        // リストに表示するタイトルとサブタイトルを設定する。
+//        SimpleAdapter adapter = new SimpleAdapter(activity, shopNameAddress, R.layout.list, new String[]{"shopName", "shopAddress"},
+//                new int[]{R.id.shopName, R.id.shopAddress});
 
         // お店情報の検索、表示の処理が終了した場合、読み込みグルングルンを終了する。
         if (this.m_ProgressDialog != null && this.m_ProgressDialog.isShowing()) {
